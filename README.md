@@ -4,7 +4,7 @@
 yarn build
 
 # npm 배포 및 firebase 호스팅
-npm publish --access=public
+npm publish --access=public \n
 firebase login 후 firebase deploy
 
 사용법
