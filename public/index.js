@@ -57,11 +57,11 @@ window.fetch = function () {
                     return [4 /*yield*/, originalFetch.apply(void 0, args)];
                 case 1:
                     response = _b.sent();
-                    sendLoToServer({
+                    sendLogToServer({
                         resource: resource,
-                        method: (config === null || config === void 0 ? void 0 : config.method) || 'GET',
+                        method: (config === null || config === void 0 ? void 0 : config.method) || "GET",
                         timestamp: new Date().toISOString(),
-                        status: response.status
+                        status: response.status,
                     });
                     return [2 /*return*/, response];
             }
@@ -69,8 +69,21 @@ window.fetch = function () {
     });
 };
 // }
-function sendLoToServer(log) {
+function sendLogToServer(log) {
     console.log(log);
     // navigator.sendBeacon('url', JSON.stringify(log))
 }
+document.addEventListener("click", function (event) {
+    var target = event.target;
+    // 클릭한 요소의 정보 수집
+    var log = {
+        element: target.tagName, // 클릭한 요소의 태그명
+        id: target.id || null, // 요소의 ID
+        classes: target.className || null, // 요소의 클래스
+        text: target.textContent || null, // 요소의 텍스트 내용
+        timestamp: new Date().toISOString(), // 클릭 시간
+    };
+    // 로그 전송
+    sendLogToServer(log);
+});
 module.exports = { hi: hi, setId: setId };

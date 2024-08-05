@@ -8,7 +8,8 @@
     "deploy": "npm publish --access=public",
     "npm-test": "npm link && npm ls -g --depth=0",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "npx tsc index.ts --outDir public && npx tsc"
+    "build": "npx tsc src/index.ts --outDir public && npx tsc",
+    "firebase-deploy": "firebase deploy --project hnormal-473c0"
   },
   "exports": {
     ".": {
