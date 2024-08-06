@@ -1,36 +1,40 @@
 "use strict";
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
 function hi(text) {
     return `안녕하세요? ${text}`;
 }
 function setId(id) {
     console.log(id);
 }
-// function interceptionFetch() {
-const originalFetch = window.fetch;
-window.fetch = (...args) => __awaiter(void 0, void 0, void 0, function* () {
-    const [resource, config] = args;
-    const response = yield originalFetch(...args);
-    sendLogToServer({
-        resource,
-        method: (config === null || config === void 0 ? void 0 : config.method) || "GET",
-        timestamp: new Date().toISOString(),
-        status: response.status,
-    });
-    return response;
-});
-// }
+// const originalFetch = window.fetch;
+// window.fetch = async (...args) => {
+//   const [resource, config] = args as any;
+//   const response = await originalFetch(...args);
+//   sendLogToServer({
+//     resource,
+//     method: config?.method || "GET",
+//     timestamp: new Date().toISOString(),
+//     status: response.status,
+//   });
+//   return response;
+// };
+let abortController = undefined;
 function sendLogToServer(log) {
     console.log(log);
     // navigator.sendBeacon('url', JSON.stringify(log))
+    // 아래부터는 추가한 것
+    if (abortController) {
+        abortController.abort();
+    }
+    // 새로운 abortController 생성
+    abortController = new AbortController();
+    const { signal } = abortController;
+    fetch(`https://hooks.slack.com/services/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`, {
+        method: "POST",
+        body: JSON.stringify({
+            text: JSON.stringify(log),
+        }),
+        signal, // abortController의 signal 전달
+    }).then((response) => response.json());
 }
 document.addEventListener("click", (event) => {
     const target = event.target;
@@ -45,4 +49,11 @@ document.addEventListener("click", (event) => {
     // 로그 전송
     sendLogToServer(log);
 });
-module.exports = { hi, setId };
+class Hnormal {
+    constructor() {
+        this.init = () => {
+            console.log("HNormal connected!");
+        };
+    }
+}
+module.exports = { hi, setId, Hnormal };

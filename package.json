@@ -1,6 +1,6 @@
 {
   "name": "@hoosss-test/utils",
-  "version": "1.0.34",
+  "version": "1.0.35",
   "description": "first test",
   "main": "./dist/index.js",
   "scripts": {
